@@ -16,6 +16,8 @@ export interface IUserModel {
     | { success: true; id: string }
     | { success: false; error: "root_user_already_exists" }
   >;
+
+  joinTeam(userId: string, teamId: string): Promise<void>;
 }
 
 class UserModel implements IUserModel {
@@ -47,6 +49,10 @@ class UserModel implements IUserModel {
       });
       return { success: true, id: userRef.id };
     });
+  }
+
+  async joinTeam(userId: string, teamId: string) {
+    await firestore.collection("users").doc(userId).update({ teamId });
   }
 }
 
