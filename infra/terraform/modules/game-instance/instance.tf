@@ -30,4 +30,8 @@ resource "google_compute_instance" "game_instance" {
   }
 
   tags = ["game-instance"]
+
+  lifecycle {
+    ignore_changes = [metadata]
+  }
 }
