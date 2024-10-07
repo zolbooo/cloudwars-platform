@@ -1,6 +1,7 @@
 import { firestore } from "./db";
 
 export interface GameSettings {
+  maxTeams: number;
   teamMaxSize: number;
   startDate: Date;
   endDate: Date;
