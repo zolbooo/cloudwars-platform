@@ -5,6 +5,7 @@ import { users } from "./users";
 export interface Team {
   id: string;
   name: string;
+  index: number;
   score: {
     total: number;
     attack: number;
@@ -19,7 +20,7 @@ export interface ITeamsModel {
   listTeams(): Promise<Omit<Team, "teamPasswordHash">[]>;
   createTeam(
     userId: string,
-    input: Omit<Team, "id">
+    input: Omit<Team, "id" | "index" | "score">
   ): Promise<
     | { success: true; teamId: string }
     | {
@@ -52,7 +53,10 @@ class TeamsModel implements ITeamsModel {
     });
   }
 
-  async createTeam(userId: string, input: Omit<Team, "id" | "score">) {
+  async createTeam(
+    userId: string,
+    input: Omit<Team, "id" | "index" | "score">
+  ) {
     return await firestore.runTransaction(async () => {
       const config = await metadata.getGameSettings();
       if (!config) {
@@ -78,6 +82,7 @@ class TeamsModel implements ITeamsModel {
       await teamRef.set({
         ...input,
         id: teamRef.id,
+        index: totalTeams,
         score: {
           total: 0,
           attack: 0,
