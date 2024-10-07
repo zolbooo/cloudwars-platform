@@ -22,3 +22,10 @@ module "db" {
   project_id = var.project_id
   region     = var.region
 }
+
+module "game-coordinator" {
+  source = "./modules/game-coordinator"
+
+  project_id = var.project_id
+  region     = var.region
+}
