@@ -1,4 +1,5 @@
 import { firestore } from "./db";
+import { metadata } from "./metadata";
 import { users } from "./users";
 
 export interface Team {
@@ -21,7 +22,13 @@ export interface ITeamsModel {
     input: Omit<Team, "id">
   ): Promise<
     | { success: true; teamId: string }
-    | { success: false; error: "team_name_already_taken" }
+    | {
+        success: false;
+        error:
+          | "team_name_already_taken"
+          | "max_teams_reached"
+          | "setup_not_finished";
+      }
   >;
 }
 
@@ -47,6 +54,18 @@ class TeamsModel implements ITeamsModel {
 
   async createTeam(userId: string, input: Omit<Team, "id" | "score">) {
     return await firestore.runTransaction(async () => {
+      const config = await metadata.getGameSettings();
+      if (!config) {
+        return { success: false, error: "setup_not_finished" } as const;
+      }
+      const totalTeams = await firestore
+        .collection("teams")
+        .get()
+        .then((snapshot) => snapshot.size);
+      if (totalTeams >= config.maxTeams) {
+        return { success: false, error: "max_teams_reached" } as const;
+      }
+
       const snapshot = await firestore
         .collection("teams")
         .where("name", "==", input.name)
