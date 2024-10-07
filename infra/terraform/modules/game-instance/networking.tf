@@ -18,3 +18,9 @@ module "instance_address" {
   names      = ["team-${var.team_index}-instance-address"]
   addresses  = ["10.124.${var.team_index}.10"]
 }
+
+resource "google_compute_address" "game_instance_public_ip" {
+  name         = "team-${var.team_index}-public-ip"
+  project      = var.project_id
+  address_type = "EXTERNAL"
+}

@@ -22,6 +22,9 @@ resource "google_compute_instance" "game_instance" {
     network    = var.network_name
     subnetwork = google_compute_subnetwork.team_subnet.name
     network_ip = module.instance_address.addresses[0]
+    access_config {
+      nat_ip = google_compute_address.game_instance_public_ip.address
+    }
   }
 
   service_account {
