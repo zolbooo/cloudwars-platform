@@ -30,6 +30,11 @@ variable "service_name" {
   description = "The name of the service"
 }
 
+variable "game_coordinator_url" {
+  type        = string
+  description = "The URL of the game coordinator"
+}
+
 variable "production_mode" {
   type        = bool
   description = "Whether if enable production mode protections: e.g. enable deletion protection"

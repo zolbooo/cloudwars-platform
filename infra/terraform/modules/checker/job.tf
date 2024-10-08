@@ -21,6 +21,10 @@ resource "google_cloud_run_v2_job" "checker" {
           name  = "CHECKER_SERVICE_NAME"
           value = var.service_name
         }
+        env {
+          name  = "GAME_COORDINATOR_URL"
+          value = var.game_coordinator_url
+        }
       }
       service_account = google_service_account.checker.email
 
