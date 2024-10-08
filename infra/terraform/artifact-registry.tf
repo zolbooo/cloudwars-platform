@@ -13,3 +13,9 @@ resource "google_artifact_registry_repository" "checkers" {
 
   depends_on = [google_project_service.artifact-registry]
 }
+
+resource "google_artifact_registry_repository_iam_member" "gh_actions" {
+  repository = google_artifact_registry_repository.checkers.name
+  role       = "roles/artifactregistry.writer"
+  member     = "serviceAccount:${module.ci.gh_actions_service_account_email}"
+}
