@@ -1,9 +1,11 @@
+import { FieldValue } from "@google-cloud/firestore";
+
 import { firestore } from "./db";
 import { metadata } from "./metadata";
 import { users } from "./users";
 
 export interface Team {
-  id: string;
+  id: number;
   name: string;
   index: number;
   score: {
@@ -16,13 +18,13 @@ export interface Team {
 }
 
 export interface ITeamsModel {
-  getTeamById(id: string): Promise<Team | null>;
+  getTeamById(id: number): Promise<Team | null>;
   listTeams(): Promise<Omit<Team, "teamPasswordHash">[]>;
   createTeam(
     userId: string,
     input: Omit<Team, "id" | "index" | "score">
   ): Promise<
-    | { success: true; teamId: string }
+    | { success: true; teamId: number }
     | {
         success: false;
         error:
@@ -31,11 +33,16 @@ export interface ITeamsModel {
           | "setup_not_finished";
       }
   >;
+
+  updateScore(teamId: number, scores: Team["score"]): Promise<void>;
 }
 
 class TeamsModel implements ITeamsModel {
-  async getTeamById(id: string) {
-    const snapshot = await firestore.collection("teams").doc(id).get();
+  async getTeamById(id: number) {
+    const snapshot = await firestore
+      .collection("teams")
+      .doc(id.toString())
+      .get();
     if (!snapshot.exists) {
       return null;
     }
@@ -78,22 +85,36 @@ class TeamsModel implements ITeamsModel {
         return { success: false, error: "team_name_already_taken" } as const;
       }
 
-      const teamRef = firestore.collection("teams").doc();
-      await teamRef.set({
-        ...input,
-        id: teamRef.id,
-        index: totalTeams,
-        score: {
-          total: 0,
-          attack: 0,
-          defense: 0,
-          availability: 0,
-        },
-      } satisfies Team);
+      const id = totalTeams + 1;
+      await firestore
+        .collection("teams")
+        .doc(id.toString())
+        .create({
+          ...input,
+          id,
+          score: {
+            total: 0,
+            attack: 0,
+            defense: 0,
+            availability: 0,
+          },
+        });
 
-      await users.joinTeam(userId, teamRef.id);
-      return { success: true, teamId: teamRef.id } as const;
+      await users.joinTeam(userId, id);
+      return { success: true, teamId: id } as const;
     });
+  }
+
+  async updateScore(teamId: number, scores: Team["score"]): Promise<void> {
+    await firestore
+      .collection("teams")
+      .doc(teamId.toString())
+      .update({
+        "score.total": FieldValue.increment(scores.total),
+        "score.attack": FieldValue.increment(scores.attack),
+        "score.defense": FieldValue.increment(scores.defense),
+        "score.availability": FieldValue.increment(scores.availability),
+      });
   }
 }
 

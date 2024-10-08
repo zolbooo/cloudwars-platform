@@ -5,7 +5,7 @@ export interface User {
   role: "admin" | "user";
   username: string;
   passwordHash: string;
-  teamId: string | null;
+  teamId: number | null;
 }
 
 export interface IUserModel {
@@ -17,7 +17,7 @@ export interface IUserModel {
     | { success: false; error: "root_user_already_exists" }
   >;
 
-  joinTeam(userId: string, teamId: string): Promise<void>;
+  joinTeam(userId: string, teamId: number): Promise<void>;
 }
 
 class UserModel implements IUserModel {
@@ -51,7 +51,7 @@ class UserModel implements IUserModel {
     });
   }
 
-  async joinTeam(userId: string, teamId: string) {
+  async joinTeam(userId: string, teamId: number) {
     await firestore.collection("users").doc(userId).update({ teamId });
   }
 }
