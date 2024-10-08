@@ -15,7 +15,7 @@ resource "google_compute_firewall" "game_instances_allow_ssh" {
 resource "google_compute_firewall" "game_instances_allow_internal" {
   name        = "game-instances-allow-internal"
   network     = google_compute_network.game_network.name
-  description = "Allow internal connections between game instances"
+  description = "Allow internal connections between game subnetworks"
 
   disabled           = true # Disable internal traffic by default, they will be enabled by the game coordinator
   source_ranges      = ["10.124.0.0/16"]
@@ -25,7 +25,7 @@ resource "google_compute_firewall" "game_instances_allow_internal" {
     protocol = "all"
   }
 
-  target_tags = ["game-instance"]
+  target_tags = ["game-instance", "service-checker"]
 
   lifecycle {
     ignore_changes = [disabled] # Ignore changes to the disabled attribute, which is managed by the game coordinator
