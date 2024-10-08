@@ -54,4 +54,6 @@ module "checker" {
   service_name  = each.value
 
   dispatcher_service_account_email = module.game-coordinator.checker_service_account_email
+
+  production_mode = var.production_mode
 }

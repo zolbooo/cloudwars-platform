@@ -28,4 +28,6 @@ resource "google_cloud_run_v2_job" "checker" {
       }
     }
   }
+
+  deletion_protection = var.production_mode
 }

@@ -29,3 +29,8 @@ variable "service_name" {
   type        = string
   description = "The name of the service"
 }
+
+variable "production_mode" {
+  type        = bool
+  description = "Whether if enable production mode protections: e.g. enable deletion protection"
+}
