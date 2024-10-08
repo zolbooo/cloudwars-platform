@@ -16,4 +16,8 @@ variable "network_name" {
 variable "team_index" {
   type        = number
   description = "The team index that is used to assign subnet and instance names"
+  validation {
+    condition     = var.team_index > 0 && var.team_index < 255
+    error_message = "Team index must be greater than 0 and less than 255 (255 is reserved for the checker subnet)"
+  }
 }
