@@ -1,8 +1,13 @@
+import { z } from "zod";
 import { FieldValue } from "@google-cloud/firestore";
 
 import { firestore } from "./db";
 import { metadata } from "./metadata";
 import { users } from "./users";
+
+export const serviceStatusSchema = z.enum(["UP", "MUMBLE", "CORRUPT", "DOWN"]);
+export type ServiceStatus = z.infer<typeof serviceStatusSchema>;
+export type ServiceStatusDetails = { push: ServiceStatus; pull: ServiceStatus };
 
 export interface Team {
   id: number;
@@ -14,6 +19,7 @@ export interface Team {
     defense: number;
     availability: number;
   };
+  serviceStatus: Record<string, ServiceStatusDetails>;
   teamPasswordHash: string;
 }
 
@@ -35,6 +41,11 @@ export interface ITeamsModel {
   >;
 
   updateScore(teamId: number, scores: Team["score"]): Promise<void>;
+  updateServiceStatus(
+    teamId: number,
+    serviceName: string,
+    serviceStatusDetails: ServiceStatusDetails
+  ): Promise<void>;
 }
 
 class TeamsModel implements ITeamsModel {
@@ -114,6 +125,19 @@ class TeamsModel implements ITeamsModel {
         "score.attack": FieldValue.increment(scores.attack),
         "score.defense": FieldValue.increment(scores.defense),
         "score.availability": FieldValue.increment(scores.availability),
+      });
+  }
+
+  async updateServiceStatus(
+    teamId: number,
+    serviceName: string,
+    serviceStatusDetails: ServiceStatusDetails
+  ): Promise<void> {
+    await firestore
+      .collection("teams")
+      .doc(teamId.toString())
+      .update({
+        [`serviceStatus.${serviceName}`]: serviceStatusDetails,
       });
   }
 }

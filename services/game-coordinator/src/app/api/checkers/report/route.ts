@@ -1,16 +1,21 @@
+import assert from "assert/strict";
 import { z } from "zod";
+import { verifyJWT } from "jwt-gcp-kms";
 import { OAuth2Client } from "google-auth-library";
 import { NextRequest, NextResponse } from "next/server";
 
+import { getFlagSigningPublicKeys } from "@/core/flags/keys";
+
 import { metadata } from "@/models/metadata";
+import { serviceStatusSchema, teams } from "@/models/teams";
 
 export const dynamic = "force-dynamic";
 
 const checkerReportSchema = z.strictObject({
   service: z.string(),
   status: z.strictObject({
-    push: z.enum(["UP", "MUMBLE", "CORRUPT", "DOWN"]),
-    pull: z.enum(["UP", "MUMBLE", "CORRUPT", "DOWN"]),
+    push: serviceStatusSchema,
+    pull: serviceStatusSchema,
   }),
   roundFlag: z.string(),
 });
@@ -92,6 +97,22 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // TODO: Verify round flag and update scoreboard accordingly
+  const { data } = validationResult;
+  let flagData: { round: number; team_id: number; service_name: string };
+  try {
+    const flagToken = data.roundFlag.split("{")[1].split("}")[0];
+    flagData = await verifyJWT(flagToken, await getFlagSigningPublicKeys());
+    assert(flagData.service_name === data.service);
+  } catch {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "invalid_flag",
+      },
+      { status: 400 }
+    );
+  }
+
+  await teams.updateServiceStatus(flagData.team_id, data.service, data.status);
   return NextResponse.json({ success: true });
 }
