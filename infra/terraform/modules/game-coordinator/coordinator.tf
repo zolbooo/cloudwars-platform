@@ -14,7 +14,7 @@ resource "google_cloud_run_v2_service" "game_coordinator" {
   template {
     service_account = google_service_account.game_coordinator.email
     containers {
-      image = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.app.name}/game-coordinator:latest"
+      image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.app_artifact_registry_repository_name}/game-coordinator:latest"
 
       env {
         name  = "GCP_PROJECT_ID"

@@ -23,11 +23,19 @@ module "db" {
   region     = var.region
 }
 
+module "ci" {
+  source = "./modules/ci"
+
+  project_id = var.project_id
+  region     = var.region
+}
 module "game-coordinator" {
   source = "./modules/game-coordinator"
 
   project_id = var.project_id
   region     = var.region
+
+  app_artifact_registry_repository_name = module.ci.app_artifact_registry_repository_name
 }
 
 module "checker" {
