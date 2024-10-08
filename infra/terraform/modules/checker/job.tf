@@ -16,6 +16,11 @@ resource "google_cloud_run_v2_job" "checker" {
     template {
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.registry_name}/${var.service_name}:latest"
+
+        env {
+          name  = "CHECKER_SERVICE_NAME"
+          value = var.service_name
+        }
       }
       service_account = google_service_account.checker.email
 
