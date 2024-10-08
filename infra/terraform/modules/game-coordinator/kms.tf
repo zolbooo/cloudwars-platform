@@ -18,3 +18,21 @@ resource "google_kms_crypto_key" "flag_key" {
     algorithm = "EC_SIGN_P256_SHA256"
   }
 }
+
+resource "google_project_iam_custom_role" "key_version_viewer" {
+  role_id = "key_version_viewer"
+  title   = "Cloud KMS Key version viewer"
+  permissions = [
+    "cloudkms.cryptoKeyVersions.list",
+  ]
+}
+resource "google_kms_crypto_key_iam_member" "game_coordinator-flag_key-version-viewer" {
+  crypto_key_id = google_kms_crypto_key.flag_key.id
+  role          = google_project_iam_custom_role.key_version_viewer.id
+  member        = "serviceAccount:${google_service_account.game_coordinator.email}"
+}
+resource "google_kms_crypto_key_iam_member" "game_coordinator-flag_key-public-key-viewer" {
+  crypto_key_id = google_kms_crypto_key.flag_key.id
+  role          = "roles/cloudkms.publicKeyViewer"
+  member        = "serviceAccount:${google_service_account.game_coordinator.email}"
+}
