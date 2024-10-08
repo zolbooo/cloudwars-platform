@@ -5,3 +5,7 @@ resource "google_project_iam_custom_role" "key_version_viewer" {
     "cloudkms.cryptoKeyVersions.list",
   ]
 }
+
+resource "google_service_account" "game_coordinator" {
+  account_id = "game-coordinator"
+}
