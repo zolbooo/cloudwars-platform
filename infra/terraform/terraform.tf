@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "cloudwars-tf-state" # CHANGEME: Change this to your own GCS bucket name
+    bucket = "cloudwars-tf-state-dev" # CHANGEME: Change this to your own GCS bucket name
     prefix = "terraform/state"
   }
   required_providers {
