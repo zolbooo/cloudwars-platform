@@ -36,3 +36,18 @@ resource "google_kms_crypto_key_iam_member" "game_coordinator-flag_key-public-ke
   role          = "roles/cloudkms.publicKeyViewer"
   member        = "serviceAccount:${google_service_account.game_coordinator.email}"
 }
+
+resource "google_project_iam_custom_role" "flag_key_signer_user" {
+  role_id = "kms_key_user"
+  title   = "Cloud KMS Key signer user"
+  permissions = [
+    "cloudkms.cryptoKeyVersions.list",
+    "cloudkms.cryptoKeyVersions.viewPublicKey",
+    "cloudkms.cryptoKeyVersions.useToSign"
+  ]
+}
+resource "google_kms_crypto_key_iam_member" "checker_dispatcher-flag_key-signer-user" {
+  crypto_key_id = google_kms_crypto_key.flag_key.id
+  role          = google_project_iam_custom_role.flag_key_signer_user.id
+  member        = "serviceAccount:${google_service_account.dispatcher.email}"
+}
