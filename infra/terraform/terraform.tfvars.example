@@ -1,3 +1,5 @@
 # CHANGEME: Set variables and rename this file to terraform.tfvars
 project_id = ""
 region     = ""
+
+production_mode = false

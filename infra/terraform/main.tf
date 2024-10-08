@@ -36,6 +36,8 @@ module "game-coordinator" {
   region     = var.region
 
   app_artifact_registry_repository_name = module.ci.app_artifact_registry_repository_name
+
+  production_mode = var.production_mode
 }
 
 module "checker" {

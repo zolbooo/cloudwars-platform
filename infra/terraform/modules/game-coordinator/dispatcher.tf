@@ -37,6 +37,8 @@ resource "google_cloud_run_v2_job" "dispatcher" {
       service_account = google_service_account.dispatcher.email
     }
   }
+
+  deletion_protection = var.production_mode
 }
 
 resource "google_project_iam_custom_role" "run_jobs_dispatcher" {

@@ -35,5 +35,6 @@ resource "google_cloud_run_v2_service" "game_coordinator" {
     }
   }
 
-  depends_on = [google_project_service.run-api]
+  deletion_protection = var.production_mode
+  depends_on          = [google_project_service.run-api]
 }
