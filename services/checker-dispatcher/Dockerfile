@@ -30,4 +30,4 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 USER appuser
 COPY . .
 
-CMD python3 main.py
+CMD ["python3", "main.py"]
