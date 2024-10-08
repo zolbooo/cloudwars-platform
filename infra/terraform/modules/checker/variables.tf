@@ -11,6 +11,10 @@ variable "network_name" {
   type        = string
   description = "The name of the VPC network where game instances will are deployed"
 }
+variable "subnet_name" {
+  type        = string
+  description = "The name of the subnet where the checker instances will be deployed"
+}
 
 variable "dispatcher_service_account_email" {
   type        = string
