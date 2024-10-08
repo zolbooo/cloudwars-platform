@@ -7,12 +7,12 @@ resource "google_cloud_run_v2_job" "checker" {
   name     = "${var.service_name}-checker"
   location = var.region
 
-  template {
-    labels = {
-      purpose      = "service-checker"
-      service_name = var.service_name
-    }
+  labels = {
+    purpose      = "service-checker"
+    service_name = var.service_name
+  }
 
+  template {
     template {
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.registry_name}/${var.service_name}:latest"
