@@ -1,18 +1,19 @@
 import os
 import httpx
-import google.auth
+import google.oauth2.id_token
+import google.auth.transport.requests
 
 from .check import ServiceStatus
-
-credentials, project = google.auth.default()
 
 
 def report_to_coordinator(service_status: ServiceStatus, round_flag: str):
     service_name = os.getenv("CHECKER_SERVICE_NAME")
     coordinator_base_url = os.getenv("GAME_COORDINATOR_URL")
 
-    auth_token = credentials.token
-    assert auth_token is not None, "Auth token is not found"
+    id_token = google.oauth2.id_token.fetch_id_token(
+        request=google.auth.transport.requests.Request(),
+        target_audience=coordinator_base_url,
+    )
     res = httpx.post(
         f"{coordinator_base_url}/api/checkers/report",
         json={
@@ -23,7 +24,7 @@ def report_to_coordinator(service_status: ServiceStatus, round_flag: str):
             },
             "round_flag": round_flag,
         },
-        headers={"Authorization": f"Bearer {auth_token}"},
+        headers={"Authorization": f"Bearer {id_token}"},
     )
     assert (
         res.status_code == 200
