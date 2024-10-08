@@ -26,9 +26,11 @@ def invoke_checker(job: run_v2.Job, target_ip: str, round_flag: str):
             overrides={
                 "container_overrides": [
                     {
-                        "env": [
-                            {"name": "CHECKER_TARGET_IP", "value": target_ip},
-                            {"name": "CHECKER_ROUND_FLAG", "value": round_flag},
+                        "args": [
+                            "--target-ip",
+                            target_ip,
+                            "--round-flag",
+                            round_flag,
                         ]
                     }
                 ]
