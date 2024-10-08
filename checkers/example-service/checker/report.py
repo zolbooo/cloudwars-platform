@@ -22,7 +22,7 @@ def report_to_coordinator(service_status: ServiceStatus, round_flag: str):
                 "push": service_status.push.name,
                 "pull": service_status.pull.name,
             },
-            "round_flag": round_flag,
+            "roundFlag": round_flag,
         },
         headers={"Authorization": f"Bearer {id_token}"},
     )
