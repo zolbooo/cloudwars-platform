@@ -31,7 +31,7 @@ module "game-coordinator" {
 }
 
 module "checker" {
-  for_each = ["example-service"] # CHANGEME: Add the names of the services you want to run checkers for
+  for_each = toset(["example-service"]) # CHANGEME: Add the names of the services you want to run checkers for
 
   source = "./modules/checker"
 
@@ -39,6 +39,7 @@ module "checker" {
   region     = var.region
 
   network_name  = module.vpc.game_network_name
+  subnet_name   = module.vpc.checker_subnet_name
   registry_name = google_artifact_registry_repository.checkers.name
   service_name  = each.value
 
