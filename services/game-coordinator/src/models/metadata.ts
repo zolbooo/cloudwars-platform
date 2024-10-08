@@ -6,6 +6,11 @@ export interface GameSettings {
   startDate: Date;
   endDate: Date;
   roundDurationMinutes: number;
+  scoreWeights: {
+    attack: number;
+    defense: number;
+    availability: number;
+  };
 }
 
 export interface IMetadataModel {
