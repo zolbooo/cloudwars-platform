@@ -20,6 +20,10 @@ variable "dispatcher_service_account_email" {
   type        = string
   description = "The email of the service account used by the checker dispatcher"
 }
+variable "service_checker_service_account_email" {
+  type        = string
+  description = "The email of the service account used by the service checkers"
+}
 
 variable "registry_name" {
   type        = string

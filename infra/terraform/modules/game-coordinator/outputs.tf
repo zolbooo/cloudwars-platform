@@ -1,5 +1,8 @@
-output "checker_service_account_email" {
+output "checker_dispatcher_service_account_email" {
   value = google_service_account.dispatcher.email
+}
+output "service_checker_service_account_email" {
+  value = google_service_account.service-checker.email
 }
 
 output "url" {

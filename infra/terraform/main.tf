@@ -53,8 +53,9 @@ module "checker" {
   registry_name = google_artifact_registry_repository.checkers.name
   service_name  = each.value
 
-  game_coordinator_url             = module.game-coordinator.url
-  dispatcher_service_account_email = module.game-coordinator.checker_service_account_email
+  game_coordinator_url                  = module.game-coordinator.url
+  dispatcher_service_account_email      = module.game-coordinator.checker_dispatcher_service_account_email
+  service_checker_service_account_email = module.game-coordinator.service_checker_service_account_email
 
   production_mode = var.production_mode
 }

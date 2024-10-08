@@ -32,6 +32,11 @@ resource "google_cloud_run_v2_service" "game_coordinator" {
         name  = "FLAG_KEY_REGION"
         value = google_kms_key_ring.game_key_ring.location
       }
+
+      env {
+        name  = "CHECKER_SERVICE_ACCOUNT_EMAIL"
+        value = google_service_account.service-checker.email
+      }
     }
   }
 

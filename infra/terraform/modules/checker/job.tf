@@ -1,8 +1,3 @@
-resource "google_service_account" "checker" {
-  account_id  = "${var.service_name}-checker"
-  description = "Service account used by the checker for the \"${var.service_name}\" service"
-}
-
 resource "google_cloud_run_v2_job" "checker" {
   name     = "${var.service_name}-checker"
   location = var.region
@@ -26,7 +21,7 @@ resource "google_cloud_run_v2_job" "checker" {
           value = var.game_coordinator_url
         }
       }
-      service_account = google_service_account.checker.email
+      service_account = var.service_checker_service_account_email
 
       vpc_access {
         network_interfaces {
