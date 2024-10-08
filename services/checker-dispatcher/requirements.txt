@@ -1,6 +1,8 @@
 cachetools==5.5.0
 certifi==2024.8.30
+cffi==1.17.1
 charset-normalizer==3.3.2
+cryptography==43.0.1
 google-api-core==2.20.0
 google-auth==2.35.0
 google-cloud-kms==3.0.0
@@ -14,6 +16,7 @@ proto-plus==1.24.0
 protobuf==5.28.2
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
+pycparser==2.22
 requests==2.32.3
 rsa==4.9
 urllib3==2.2.3
