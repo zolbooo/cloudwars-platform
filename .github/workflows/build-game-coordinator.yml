@@ -19,7 +19,7 @@ jobs:
           service_account: ${{ secrets.SA_EMAIL }}
       - uses: google-github-actions/setup-gcloud@v2
       - name: Authenticate with Docker
-        run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
+        run: gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev --quiet
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
