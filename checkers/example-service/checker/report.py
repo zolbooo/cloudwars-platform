@@ -12,7 +12,7 @@ def report_to_coordinator(service_status: ServiceStatus, round_flag: str):
 
     id_token = google.oauth2.id_token.fetch_id_token(
         request=google.auth.transport.requests.Request(),
-        target_audience=coordinator_base_url,
+        audience=coordinator_base_url,
     )
     res = httpx.post(
         f"{coordinator_base_url}/api/checkers/report",
