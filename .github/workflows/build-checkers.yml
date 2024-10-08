@@ -13,7 +13,7 @@ jobs:
       matrix:
         checker:
           # CHANGEME: Add the names of your checkers here
-          - name: example-checker
+          - name: example-service
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
