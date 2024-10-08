@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { getFlagSigningPublicKeys } from "@/core/flags/keys";
 
+export const dynamic = "force-dynamic";
+
 let jwks: JsonWebKeySet | null = null;
 export async function GET(req: NextRequest) {
   if (!jwks || req.headers.has("x-revalidate")) {
