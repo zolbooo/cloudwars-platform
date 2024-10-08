@@ -30,11 +30,17 @@ module "game-coordinator" {
   region     = var.region
 }
 
-module "checkers" {
-  source = "./modules/checkers"
+module "checker" {
+  for_each = ["example-service"] # CHANGEME: Add the names of the services you want to run checkers for
+
+  source = "./modules/checker"
 
   project_id = var.project_id
   region     = var.region
 
-  network_name = module.vpc.game_network_name
+  network_name  = module.vpc.game_network_name
+  registry_name = google_artifact_registry_repository.checkers.name
+  service_name  = each.value
+
+  dispatcher_service_account_email = module.game-coordinator.checker_service_account_email
 }
