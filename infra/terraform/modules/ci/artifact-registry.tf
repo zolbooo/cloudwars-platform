@@ -13,3 +13,9 @@ resource "google_artifact_registry_repository" "app" {
 
   depends_on = [google_project_service.artifact-registry]
 }
+
+resource "google_artifact_registry_repository_iam_member" "gh_actions" {
+  repository = google_artifact_registry_repository.app.name
+  role       = "roles/artifactregistry.writer"
+  member     = "serviceAccount:${google_service_account.gh_actions.email}"
+}

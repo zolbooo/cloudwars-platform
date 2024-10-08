@@ -1,3 +1,7 @@
+resource "google_project_service" "iam-credentials" {
+  service = "iamcredentials.googleapis.com"
+}
+
 resource "google_service_account" "gh_actions" {
   account_id  = "gh-actions"
   description = "Service account used by GitHub Actions"
