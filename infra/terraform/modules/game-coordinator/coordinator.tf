@@ -38,3 +38,13 @@ resource "google_cloud_run_v2_service" "game_coordinator" {
   deletion_protection = var.production_mode
   depends_on          = [google_project_service.run-api]
 }
+
+# Allow public access to the game coordinator
+resource "google_cloud_run_service_iam_binding" "game_coordinator" {
+  location = google_cloud_run_v2_service.game_coordinator.location
+  service  = google_cloud_run_v2_service.game_coordinator.name
+  role     = "roles/run.invoker"
+  members = [
+    "allUsers"
+  ]
+}
