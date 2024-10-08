@@ -11,6 +11,28 @@ resource "google_cloud_run_v2_job" "dispatcher" {
     template {
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.app_artifact_registry_repository_name}/checker-dispatcher:latest"
+
+        env {
+          name  = "GCP_PROJECT_ID"
+          value = var.project_id
+        }
+        env {
+          name  = "GCP_REGION"
+          value = var.region
+        }
+
+        env {
+          name  = "CHECKER_KEY_RING_NAME"
+          value = google_kms_key_ring.game_key_ring.name
+        }
+        env {
+          name  = "CHECKER_KEY_REGION"
+          value = google_kms_key_ring.game_key_ring.location
+        }
+        env {
+          name  = "CHECKER_FLAG_KEY_NAME"
+          value = google_kms_crypto_key.flag_key.name
+        }
       }
       service_account = google_service_account.dispatcher.email
     }
