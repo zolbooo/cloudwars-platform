@@ -29,12 +29,12 @@ resource "google_project_iam_custom_role" "key_version_viewer" {
 resource "google_kms_crypto_key_iam_member" "game_coordinator-flag_key-version-viewer" {
   crypto_key_id = google_kms_crypto_key.flag_key.id
   role          = google_project_iam_custom_role.key_version_viewer.id
-  member        = "serviceAccount:${google_service_account.game_coordinator.email}"
+  member        = "serviceAccount:${var.game_coordinator_service_account_email}"
 }
 resource "google_kms_crypto_key_iam_member" "game_coordinator-flag_key-public-key-viewer" {
   crypto_key_id = google_kms_crypto_key.flag_key.id
   role          = "roles/cloudkms.publicKeyViewer"
-  member        = "serviceAccount:${google_service_account.game_coordinator.email}"
+  member        = "serviceAccount:${var.game_coordinator_service_account_email}"
 }
 
 resource "google_project_iam_custom_role" "flag_key_signer_user" {

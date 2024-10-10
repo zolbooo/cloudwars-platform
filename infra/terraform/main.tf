@@ -1,3 +1,9 @@
+resource "google_project_service" "secret-manager" {
+  project            = var.project_id
+  service            = "secretmanager.googleapis.com"
+  disable_on_destroy = true
+}
+
 module "vpc" {
   source = "./modules/vpc"
 
@@ -5,15 +11,22 @@ module "vpc" {
   region     = var.region
 }
 
+locals {
+  game_instances = 0 # CHANGEME: Set the number of game instances you want to run (usually it's the number of teams)
+}
 module "game-instance" {
-  count  = 0 # CHANGEME: Set the number of game instances you want to run (usually it's the number of teams)
+  count  = local.game_instances
   source = "./modules/game-instance"
 
   project_id = var.project_id
   region     = var.region
 
+  game_coordinator_service_account_email = google_service_account.game_coordinator.email
+
   network_name = module.vpc.game_network_name
   team_index   = count.index + 1
+
+  depends_on = [google_project_service.secret-manager]
 }
 
 module "db" {
@@ -35,9 +48,12 @@ module "game-coordinator" {
   project_id = var.project_id
   region     = var.region
 
-  app_artifact_registry_repository_name = module.ci.app_artifact_registry_repository_name
+  game_coordinator_service_account_email = google_service_account.game_coordinator.email
+  app_artifact_registry_repository_name  = module.ci.app_artifact_registry_repository_name
 
   production_mode = var.production_mode
+
+  depends_on = [google_project_service.secret-manager]
 }
 
 module "checker" {

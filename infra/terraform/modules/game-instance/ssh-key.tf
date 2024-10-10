@@ -16,3 +16,9 @@ resource "google_secret_manager_secret_iam_member" "instance_ssh_key_writer" {
   role      = "roles/secretmanager.secretVersionAdder"
   member    = "serviceAccount:${google_service_account.service_account.email}"
 }
+resource "google_secret_manager_secret_iam_member" "game_coordinator_ssh_key_reader" {
+  project   = var.project_id
+  secret_id = google_secret_manager_secret.instance_ssh_key.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${var.game_coordinator_service_account_email}"
+}

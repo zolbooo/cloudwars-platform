@@ -8,6 +8,11 @@ variable "region" {
   description = "The GCP region to deploy resources"
 }
 
+variable "game_coordinator_service_account_email" {
+  type        = string
+  description = "Game Coordinator service account email"
+}
+
 variable "network_name" {
   type        = string
   description = "The name of the VPC network where game instances will be deployed"

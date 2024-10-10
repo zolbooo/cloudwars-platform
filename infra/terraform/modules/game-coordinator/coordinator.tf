@@ -3,16 +3,12 @@ resource "google_project_service" "run-api" {
   service = "run.googleapis.com"
 }
 
-resource "google_service_account" "game_coordinator" {
-  account_id = "game-coordinator"
-}
-
 resource "google_cloud_run_v2_service" "game_coordinator" {
   name     = "game-coordinator"
   location = var.region
 
   template {
-    service_account = google_service_account.game_coordinator.email
+    service_account = var.game_coordinator_service_account_email
     containers {
       image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.app_artifact_registry_repository_name}/game-coordinator:latest"
 

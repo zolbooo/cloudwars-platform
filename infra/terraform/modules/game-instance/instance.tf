@@ -10,13 +10,18 @@ resource "google_compute_instance" "game_instance" {
 
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-11"
+      image = "packer-1728555415"
       labels = {
         team_id = "${var.team_index}"
       }
-      size = 10
+      size = 20
     }
   }
+
+  metadata = {
+    "ssh-key-secret-name" = google_secret_manager_secret.instance_ssh_key.secret_id
+  }
+  metadata_startup_script = "sudo -u packer bash /home/packer/bootstrap.sh"
 
   network_interface {
     network    = var.network_name

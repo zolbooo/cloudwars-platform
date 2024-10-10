@@ -7,6 +7,10 @@ variable "region" {
   description = "The GCP region to deploy resources"
 }
 
+variable "game_coordinator_service_account_email" {
+  type        = string
+  description = "Game Coordinator service account email"
+}
 variable "app_artifact_registry_repository_name" {
   type        = string
   description = "The name of the Artifact Registry repository where the app artifacts are stored"
