@@ -11,6 +11,7 @@ export interface GameSettings {
     defense: number;
     availability: number;
   };
+  flagLifetimeRounds: number;
 }
 
 export interface IMetadataModel {
