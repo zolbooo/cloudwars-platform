@@ -1,0 +1,5 @@
+# CHANGEME: Please edit the following variables to match your environment and rename this file to variables.pkrvars.hcl
+project_id=""
+region=""
+
+source_image="ubuntu-2404-noble-amd64-v20241004"
