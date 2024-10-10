@@ -6,7 +6,7 @@ module "vpc" {
 }
 
 module "game-instance" {
-  count  = 0
+  count  = 0 # CHANGEME: Set the number of game instances you want to run (usually it's the number of teams)
   source = "./modules/game-instance"
 
   project_id = var.project_id
