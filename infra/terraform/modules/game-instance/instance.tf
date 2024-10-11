@@ -11,10 +11,7 @@ resource "google_compute_instance" "game_instance" {
   boot_disk {
     initialize_params {
       image = "packer-1728555415"
-      labels = {
-        team_id = "${var.team_index}"
-      }
-      size = 20
+      size  = 20
     }
   }
 
@@ -37,7 +34,10 @@ resource "google_compute_instance" "game_instance" {
     scopes = ["cloud-platform"]
   }
 
-  tags = ["game-instance"]
+  labels = {
+    "purpose" = "game-instance"
+    "team_id" = "${var.team_index}"
+  }
 
   lifecycle {
     ignore_changes = [metadata]
