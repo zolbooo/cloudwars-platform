@@ -31,11 +31,20 @@ build {
   provisioner "shell" {
     scripts = [
       "./scripts/install-docker.sh",
+      "./scripts/setup-firewall.sh",
+      "./scripts/setup-game-user.sh",
     ]
   }
 
   provisioner "file" {
     source      = "./scripts/bootstrap.sh"
-    destination = "/home/packer/"
+    destination = "/tmp/"
+  }
+  provisioner "shell" {
+    inline = [
+      "mkdir -p /opt",
+      "sudo mv /tmp/bootstrap.sh /opt/bootstrap.sh",
+      "sudo chmod +x /opt/bootstrap.sh"
+    ]
   }
 }

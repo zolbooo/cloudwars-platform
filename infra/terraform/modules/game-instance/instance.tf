@@ -10,7 +10,7 @@ resource "google_compute_instance" "game_instance" {
 
   boot_disk {
     initialize_params {
-      image = "packer-1728555415"
+      image = "packer-1728630303"
       size  = 20
     }
   }
@@ -18,7 +18,7 @@ resource "google_compute_instance" "game_instance" {
   metadata = {
     "ssh-key-secret-name" = google_secret_manager_secret.instance_ssh_key.secret_id
   }
-  metadata_startup_script = "sudo -u packer bash /home/packer/bootstrap.sh"
+  metadata_startup_script = "/opt/bootstrap.sh"
 
   network_interface {
     network    = var.network_name
@@ -38,6 +38,7 @@ resource "google_compute_instance" "game_instance" {
     "purpose" = "game-instance"
     "team_id" = "${var.team_index}"
   }
+  tags = ["game-instance"] # Used by the firewall rules
 
   lifecycle {
     ignore_changes = [metadata]
