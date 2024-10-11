@@ -8,3 +8,9 @@ resource "google_project_iam_member" "game_coordinator_firestore-user" {
   role    = "roles/datastore.user"
   member  = "serviceAccount:${var.game_coordinator_service_account_email}"
 }
+
+resource "google_project_iam_member" "game_coordinator_instance-lister" {
+  project = var.project_id
+  role    = "roles/compute.viewer"
+  member  = "serviceAccount:${var.game_coordinator_service_account_email}"
+}
