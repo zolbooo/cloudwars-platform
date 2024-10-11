@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google-cloud/compute": "^4.7.0",
     "@google-cloud/firestore": "^7.10.0",
     "@google-cloud/kms": "^4.5.0",
     "argon2": "^0.41.1",
