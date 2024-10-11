@@ -1,5 +1,5 @@
 resource "google_compute_firewall" "game_instances_allow_ssh" {
-  name        = "game-instances-allow-ssh"
+  name        = "allow-ssh-game-instances" # Don't start name with "game-instances", since these rules are managed by the game coordinator
   network     = google_compute_network.game_network.name
   description = "Allow SSH connections to game instances"
 
@@ -12,22 +12,6 @@ resource "google_compute_firewall" "game_instances_allow_ssh" {
   target_tags = ["game-instance"]
 
   priority = 1000
-}
-resource "google_compute_firewall" "game_instances_deny_internal_ssh" {
-  name        = "game-instances-deny-internal-ssh"
-  network     = google_compute_network.game_network.name
-  description = "Deny SSH connections between game subnetworks"
-
-  source_ranges      = ["10.124.0.0/16"]
-  destination_ranges = ["10.124.0.0/16"]
-  direction          = "INGRESS"
-  deny {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-  target_tags = ["game-instance"]
-
-  priority = 1001 # Higher priority than the allow SSH rule, so it takes precedence for internal traffic
 }
 
 resource "google_compute_firewall" "game_instances_allow_internal" {
