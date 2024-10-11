@@ -33,6 +33,11 @@ resource "google_cloud_run_v2_service" "game_coordinator" {
         name  = "CHECKER_SERVICE_ACCOUNT_EMAIL"
         value = google_service_account.service-checker.email
       }
+
+      env {
+        name  = "GAME_INSTANCE_ZONE"
+        value = "${var.region}-a"
+      }
     }
   }
 
