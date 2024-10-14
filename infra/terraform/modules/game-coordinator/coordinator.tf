@@ -62,6 +62,9 @@ resource "google_cloud_run_v2_service" "game_coordinator" {
         }
       }
     }
+    scaling {
+      min_instance_count = var.production_mode ? 1 : 0
+    }
   }
 
   deletion_protection = var.production_mode
