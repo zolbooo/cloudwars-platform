@@ -24,7 +24,8 @@ export interface IUserModel {
   ): Promise<
     { success: true } | { success: false; error: "username_already_taken" }
   >;
-  joinTeam(userId: string, teamId: number): Promise<void>;
+
+  edit(id: string, data: Partial<Omit<User, "id">>): Promise<void>;
 }
 
 class UserModel implements IUserModel {
@@ -89,8 +90,9 @@ class UserModel implements IUserModel {
     });
   }
 
-  async joinTeam(userId: string, teamId: number) {
-    await firestore.collection("users").doc(userId).update({ teamId });
+  async edit(id: string, data: Partial<Omit<User, "id">>): Promise<void> {
+    const userRef = firestore.collection("users").doc(id);
+    await userRef.update(data);
   }
 }
 
