@@ -3,6 +3,13 @@ resource "google_project_service" "run-api" {
   service = "run.googleapis.com"
 }
 
+resource "google_secret_manager_secret" "auth_secret" {
+  secret_id = "game-coordinator-auth-secret"
+  replication {
+    auto {}
+  }
+}
+
 resource "google_cloud_run_v2_service" "game_coordinator" {
   name     = "game-coordinator"
   location = var.region
