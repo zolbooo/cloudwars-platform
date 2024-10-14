@@ -9,6 +9,8 @@ export interface User {
 }
 
 export interface IUserModel {
+  getByUsername(username: string): Promise<User | null>;
+
   rootUserExists(): Promise<boolean>;
   createRootUser(
     input: Omit<User, "id" | "role" | "teamId">
@@ -26,6 +28,18 @@ export interface IUserModel {
 }
 
 class UserModel implements IUserModel {
+  async getByUsername(username: string): Promise<User | null> {
+    const snapshot = await firestore
+      .collection("users")
+      .where("username", "==", username)
+      .get();
+    if (snapshot.empty) {
+      return null;
+    }
+    const userDoc = snapshot.docs[0];
+    return userDoc.data() as User;
+  }
+
   async rootUserExists() {
     const snapshot = await firestore
       .collection("users")
