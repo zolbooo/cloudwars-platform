@@ -18,7 +18,7 @@ export interface IUserModel {
   >;
 
   register(
-    input: Omit<User, "id" | "role">
+    input: Omit<User, "id" | "role" | "teamId">
   ): Promise<
     { success: true } | { success: false; error: "username_already_taken" }
   >;
@@ -56,7 +56,7 @@ class UserModel implements IUserModel {
     });
   }
 
-  register(input: Omit<User, "id" | "role">) {
+  register(input: Omit<User, "id" | "role" | "teamId">) {
     return firestore.runTransaction(async (transaction) => {
       const usernameTakenSnapshot = await transaction.get(
         firestore.collection("users").where("username", "==", input.username)
