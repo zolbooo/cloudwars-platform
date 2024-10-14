@@ -10,3 +10,9 @@ export async function registerAction(input: RegisterActionInput) {
   const passwordHash = await argon2.hash(password);
   return await users.register({ username, passwordHash });
 }
+
+export async function createRootUserAction(input: RegisterActionInput) {
+  const { username, password } = registerActionSchema.parse(input);
+  const passwordHash = await argon2.hash(password);
+  return await users.createRootUser({ username, passwordHash });
+}
