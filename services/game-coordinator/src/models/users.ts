@@ -17,6 +17,11 @@ export interface IUserModel {
     | { success: false; error: "root_user_already_exists" }
   >;
 
+  register(
+    input: Omit<User, "id" | "role">
+  ): Promise<
+    { success: true } | { success: false; error: "username_already_taken" }
+  >;
   joinTeam(userId: string, teamId: number): Promise<void>;
 }
 
@@ -48,6 +53,25 @@ class UserModel implements IUserModel {
         role: "admin",
       });
       return { success: true, id: userRef.id };
+    });
+  }
+
+  register(input: Omit<User, "id" | "role">) {
+    return firestore.runTransaction(async (transaction) => {
+      const usernameTakenSnapshot = await transaction.get(
+        firestore.collection("users").where("username", "==", input.username)
+      );
+      if (!usernameTakenSnapshot.empty) {
+        return { success: false, error: "username_already_taken" } as const;
+      }
+
+      const userRef = firestore.collection("users").doc();
+      transaction.set(userRef, {
+        ...input,
+        id: userRef.id,
+        role: "user",
+      });
+      return { success: true } as const;
     });
   }
 
