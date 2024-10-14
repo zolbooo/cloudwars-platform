@@ -9,6 +9,12 @@ resource "google_secret_manager_secret" "auth_secret" {
     auto {}
   }
 }
+resource "google_secret_manager_secret_iam_member" "game_coordinator_auth_secret_reader" {
+  project   = var.project_id
+  secret_id = google_secret_manager_secret.auth_secret.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${var.game_coordinator_service_account_email}"
+}
 
 resource "google_cloud_run_v2_service" "game_coordinator" {
   name     = "game-coordinator"
@@ -44,6 +50,16 @@ resource "google_cloud_run_v2_service" "game_coordinator" {
       env {
         name  = "GAME_INSTANCE_ZONE"
         value = "${var.region}-a"
+      }
+
+      env {
+        name = "AUTH_SECRET"
+        value_source {
+          secret_key_ref {
+            secret  = google_secret_manager_secret.auth_secret.secret_id
+            version = "latest"
+          }
+        }
       }
     }
   }
