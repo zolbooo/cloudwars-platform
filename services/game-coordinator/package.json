@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest"
   },
   "dependencies": {
     "@google-cloud/compute": "^4.7.0",
@@ -32,6 +33,7 @@
     "eslint-config-next": "14.2.15",
     "postcss": "^8",
     "tailwindcss": "^3.4.13",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^2.1.3"
   }
 }
