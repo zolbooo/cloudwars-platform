@@ -61,6 +61,16 @@ resource "google_cloud_run_v2_service" "game_coordinator" {
           }
         }
       }
+
+      env {
+        name  = "GAME_BACKGROUND_TASKS_QUEUE_NAME"
+        value = "projects/${var.project_id}/locations/${var.region}/queues/${google_cloud_tasks_queue.game_background_tasks.name}"
+      }
+
+      env {
+        name  = "APP_ORIGIN"
+        value = var.app_origin
+      }
     }
     scaling {
       min_instance_count = var.production_mode ? 1 : 0

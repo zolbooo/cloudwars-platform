@@ -48,8 +48,10 @@ module "game-coordinator" {
   project_id = var.project_id
   region     = var.region
 
+  app_origin                             = var.game_coordinator_origin
   game_coordinator_service_account_email = google_service_account.game_coordinator.email
-  app_artifact_registry_repository_name  = module.ci.app_artifact_registry_repository_name
+
+  app_artifact_registry_repository_name = module.ci.app_artifact_registry_repository_name
 
   production_mode = var.production_mode
 
