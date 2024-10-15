@@ -28,7 +28,7 @@ export interface ITeamsModel {
   listTeams(): Promise<Omit<Team, "teamPasswordHash">[]>;
   createTeam(
     userId: string,
-    input: Omit<Team, "id" | "index" | "score">
+    input: Omit<Team, "id" | "index" | "score" | "serviceStatus">
   ): Promise<
     | { success: true; teamId: number }
     | {
@@ -109,6 +109,7 @@ class TeamsModel implements ITeamsModel {
             defense: 0,
             availability: 0,
           },
+          serviceStatus: {},
         });
 
       await users.edit(userId, { teamId: id });
