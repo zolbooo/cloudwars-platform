@@ -1,10 +1,12 @@
 import assert from "assert/strict";
 import { z } from "zod";
 
+import { GameSettings } from "@/api/setup.schema";
+
 import { firestore } from "./db";
 
+import { metadata } from "./metadata";
 import { Team, teams } from "./teams";
-import { GameSettings, metadata } from "./metadata";
 
 const attackHistoryEntry = z.object({
   type: z.literal("attack"),
