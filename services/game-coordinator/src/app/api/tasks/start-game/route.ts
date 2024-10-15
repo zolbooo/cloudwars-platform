@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { metadata } from "@/models/metadata";
 import { startRounds } from "@/core/tasks/round";
 import { scheduleGameEndAt } from "@/core/tasks/end-game";
+import { setGameTrafficFlowStatus } from "@/core/instances/firewall";
 
 const oauthClient = new OAuth2Client();
 const backgroundTasksServiceAccountEmail =
@@ -53,8 +54,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  await metadata.setGameStatus({ status: "running" });
-  await startRounds();
   const settings = await metadata.getGameSettings();
   assert(
     settings,
@@ -66,4 +65,7 @@ export async function POST(req: NextRequest) {
       settings.gameDurationRounds * settings.roundDurationMinutes
     )
   );
+  await setGameTrafficFlowStatus({ enabled: true });
+  await startRounds();
+  await metadata.setGameStatus({ status: "running" });
 }
