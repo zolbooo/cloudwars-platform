@@ -1,5 +1,5 @@
-import { GameStatus } from "@/api/game/status.schema";
 import { GameSettings } from "@/api/setup.schema";
+import { GameStatus, gameStatusSchema } from "@/api/game/status.schema";
 
 import { firestore } from "./db";
 
@@ -18,9 +18,9 @@ class MetadataModel implements IMetadataModel {
       .doc("gameStatus")
       .get();
     if (!snapshot.exists) {
-      return { status: "pending" };
+      return { status: "pending", currentRound: 0, roundStartedAt: null };
     }
-    return snapshot.data() as GameStatus;
+    return gameStatusSchema.parse(snapshot.data());
   }
 
   async setGameStatus(status: Partial<GameStatus>) {
