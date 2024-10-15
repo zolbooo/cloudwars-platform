@@ -111,7 +111,7 @@ class TeamsModel implements ITeamsModel {
           },
         });
 
-      await users.joinTeam(userId, id);
+      await users.edit(userId, { teamId: id });
       return { success: true, teamId: id } as const;
     });
   }
