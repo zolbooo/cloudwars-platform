@@ -1,20 +1,7 @@
 import { GameStatus } from "@/api/game/status.schema";
+import { GameSettings } from "@/api/setup.schema";
 
 import { firestore } from "./db";
-
-export interface GameSettings {
-  maxTeams: number;
-  teamMaxSize: number;
-  startDate: Date;
-  endDate: Date;
-  roundDurationMinutes: number;
-  scoreWeights: {
-    attack: number;
-    defense: number;
-    availability: number;
-  };
-  flagLifetimeRounds: number;
-}
 
 export interface IMetadataModel {
   getGameStatus(): Promise<GameStatus>;

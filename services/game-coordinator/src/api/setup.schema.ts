@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-export const setupGameActionSchema = z.strictObject({
-  maxTeams: z.number().default(10),
-  teamMaxSize: z.number().default(5),
+export const gameSettingsSchema = z.strictObject({
+  maxTeams: z.number().int().positive().default(10),
+  teamMaxSize: z.number().int().positive().default(5),
   startDate: z
     .string()
     .datetime()
@@ -11,12 +11,9 @@ export const setupGameActionSchema = z.strictObject({
       (startDate) => startDate > new Date(),
       "Start date must be in the future"
     ),
-  endDate: z
-    .string()
-    .datetime()
-    .transform((value) => new Date(value)),
-  roundDurationMinutes: z.number().default(5),
-  flagLifetimeRounds: z.number().default(3),
+  roundDurationMinutes: z.number().int().positive().default(5),
+  gameDurationRounds: z.number().int().positive(),
+  flagLifetimeRounds: z.number().int().positive().default(3),
   scoreWeights: z
     .strictObject({
       attack: z.number().default(1),
@@ -25,4 +22,5 @@ export const setupGameActionSchema = z.strictObject({
     })
     .default({}),
 });
-export type SetupGameActionInput = z.input<typeof setupGameActionSchema>;
+export type SetupGameActionInput = z.input<typeof gameSettingsSchema>;
+export type GameSettings = z.infer<typeof gameSettingsSchema>;
