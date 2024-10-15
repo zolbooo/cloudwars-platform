@@ -2,6 +2,7 @@ import assert from "assert/strict";
 import { z } from "zod";
 import { verifyJWT } from "jwt-gcp-kms";
 import { OAuth2Client } from "google-auth-library";
+import { addMinutes, isAfter } from "date-fns";
 import { NextRequest, NextResponse } from "next/server";
 
 import { getFlagSigningPublicKeys } from "@/core/flags/keys";
@@ -87,7 +88,11 @@ export async function POST(req: NextRequest) {
       { status: 403 }
     );
   }
-  if (gameSettings.endDate.valueOf() < Date.now()) {
+  const gameEndDate = addMinutes(
+    gameSettings.startDate,
+    gameSettings.gameDurationRounds * gameSettings.roundDurationMinutes
+  );
+  if (isAfter(Date.now(), gameEndDate)) {
     return NextResponse.json(
       {
         success: false,
