@@ -78,6 +78,10 @@ resource "google_cloud_run_v2_service" "game_coordinator" {
         name  = "GAME_BACKGROUND_TASKS_QUEUE_NAME"
         value = "projects/${var.project_id}/locations/${var.region}/queues/${google_cloud_tasks_queue.game_background_tasks.name}"
       }
+      env {
+        name  = "ROUND_PROGRESS_JOB_NAME"
+        value = "projects/${var.project_id}/locations/${var.region}/jobs/${google_cloud_scheduler_job.round_progress.name}"
+      }
 
       env {
         name  = "APP_ORIGIN"
