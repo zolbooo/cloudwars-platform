@@ -6,11 +6,15 @@ export const setupGameActionSchema = z.strictObject({
   startDate: z
     .string()
     .datetime()
-    .transform((v) => new Date(v)),
+    .transform((value) => new Date(value))
+    .refine(
+      (startDate) => startDate > new Date(),
+      "Start date must be in the future"
+    ),
   endDate: z
     .string()
     .datetime()
-    .transform((v) => new Date(v)),
+    .transform((value) => new Date(value)),
   roundDurationMinutes: z.number().default(5),
   flagLifetimeRounds: z.number().default(3),
   scoreWeights: z
