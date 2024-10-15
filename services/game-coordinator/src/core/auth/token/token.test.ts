@@ -12,6 +12,7 @@ describe("JWE token signing and verification", () => {
     );
 
     const claims = {
+      uid: 'test',
       username: "test",
       role: "user",
     } as const;
