@@ -3,6 +3,10 @@ import { z } from "zod";
 export const gameSettingsSchema = z.strictObject({
   maxTeams: z.number().int().positive().default(10),
   teamMaxSize: z.number().int().positive().default(5),
+  instanceRevealDate: z
+    .string()
+    .datetime()
+    .transform((value) => new Date(value)),
   startDate: z
     .string()
     .datetime()
