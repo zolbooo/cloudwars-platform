@@ -4,6 +4,11 @@ resource "google_project_service" "cloudtasks" {
   disable_on_destroy = true
 }
 
+resource "google_service_account" "game_background_tasks" {
+  account_id  = "game-background-tasks"
+  description = "Service account for the game background tasks"
+}
+
 resource "google_cloud_tasks_queue" "game_background_tasks" {
   name     = "game-background-tasks-queue"
   location = var.region

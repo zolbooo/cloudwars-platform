@@ -16,6 +16,14 @@ resource "google_secret_manager_secret_iam_member" "game_coordinator_auth_secret
   member    = "serviceAccount:${var.game_coordinator_service_account_email}"
 }
 
+# Allow impersonation in order to allow game coordinator to create Cloud Tasks
+# Read more: https://github.com/googleapis/nodejs-tasks/issues/249#issuecomment-1095054277
+resource "google_service_account_iam_member" "game_background_tasks_impersonation" {
+  service_account_id = google_service_account.game_background_tasks.name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${var.game_coordinator_service_account_email}"
+}
+
 resource "google_cloud_run_v2_service" "game_coordinator" {
   name     = "game-coordinator"
   location = var.region
@@ -45,6 +53,10 @@ resource "google_cloud_run_v2_service" "game_coordinator" {
       env {
         name  = "CHECKER_SERVICE_ACCOUNT_EMAIL"
         value = google_service_account.service-checker.email
+      }
+      env {
+        name  = "BACKGROUND_TASKS_SERVICE_ACCOUNT_EMAIL"
+        value = google_service_account.game_background_tasks.email
       }
 
       env {
