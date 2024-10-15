@@ -11,6 +11,8 @@ const oauthClient = new OAuth2Client();
 const backgroundTasksServiceAccountEmail =
   process.env.BACKGROUND_TASKS_SERVICE_ACCOUNT_EMAIL;
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   assert(
     backgroundTasksServiceAccountEmail,
