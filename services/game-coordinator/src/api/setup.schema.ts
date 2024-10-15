@@ -25,6 +25,7 @@ export const gameSettingsSchema = z.strictObject({
       availability: z.number().default(1),
     })
     .default({}),
+  adminOnlyTeamCreation: z.boolean().default(false),
 });
 export type SetupGameActionInput = z.input<typeof gameSettingsSchema>;
 export type GameSettings = z.infer<typeof gameSettingsSchema>;
