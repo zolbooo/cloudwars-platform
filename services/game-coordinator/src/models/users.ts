@@ -9,6 +9,7 @@ export interface User {
 }
 
 export interface IUserModel {
+  getById(id: string): Promise<User | null>;
   getByUsername(username: string): Promise<User | null>;
 
   rootUserExists(): Promise<boolean>;
@@ -29,6 +30,13 @@ export interface IUserModel {
 }
 
 class UserModel implements IUserModel {
+  async getById(id: string): Promise<User | null> {
+    const userDoc = await firestore.collection("users").doc(id).get();
+    if (!userDoc.exists) {
+      return null;
+    }
+    return userDoc.data() as User;
+  }
   async getByUsername(username: string): Promise<User | null> {
     const snapshot = await firestore
       .collection("users")
