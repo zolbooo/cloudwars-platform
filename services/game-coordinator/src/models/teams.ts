@@ -10,6 +10,7 @@ export type ServiceStatusDetails = { push: ServiceStatus; pull: ServiceStatus };
 export interface Team {
   id: number;
   name: string;
+  captainId?: string;
   memberIds: string[];
   score: {
     total: number;
