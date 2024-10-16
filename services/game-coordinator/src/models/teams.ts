@@ -10,6 +10,7 @@ export type ServiceStatusDetails = { push: ServiceStatus; pull: ServiceStatus };
 export interface Team {
   id: number;
   name: string;
+  memberIds: string[];
   score: {
     total: number;
     attack: number;
@@ -21,7 +22,11 @@ export interface Team {
 }
 
 export interface ITeamsModel {
-  create(input: Omit<Team, "score" | "serviceStatus">): Promise<void>;
+  create(
+    input: Omit<Team, "memberIds" | "score" | "serviceStatus"> & {
+      memberIds?: string[];
+    }
+  ): Promise<void>;
 
   getById(id: number): Promise<Team | null>;
   getByName(name: string): Promise<Team | null>;
@@ -29,6 +34,10 @@ export interface ITeamsModel {
   getTotalTeams(): Promise<number>;
   listTeams(): Promise<Omit<Team, "teamPasswordHash">[]>;
 
+  edit(
+    id: string,
+    input: Partial<Omit<Team, "score" | "serviceStatus">>
+  ): Promise<void>;
   updateScore(teamId: number, scores: Team["score"]): Promise<void>;
   updateServiceStatus(
     teamId: number,
@@ -75,13 +84,20 @@ class TeamsModel implements ITeamsModel {
     });
   }
 
-  async create({ id, ...input }: Omit<Team, "score" | "serviceStatus">) {
+  async create({
+    id,
+    memberIds,
+    ...input
+  }: Omit<Team, "memberIds" | "score" | "serviceStatus"> & {
+    memberIds?: string[];
+  }) {
     await firestore
       .collection("teams")
       .doc(id.toString())
       .create({
         ...input,
         id,
+        memberIds: memberIds ?? [],
         score: {
           total: 0,
           attack: 0,
@@ -90,6 +106,13 @@ class TeamsModel implements ITeamsModel {
         },
         serviceStatus: {},
       });
+  }
+
+  async edit(
+    id: string,
+    input: Partial<Omit<Team, "score" | "serviceStatus">>
+  ): Promise<void> {
+    await firestore.collection("teams").doc(id).update(input);
   }
 
   async updateScore(teamId: number, scores: Team["score"]): Promise<void> {

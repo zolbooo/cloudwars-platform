@@ -22,7 +22,12 @@ export async function createTeamAction(input: CreateTeamActionInput) {
       return { success: false, error: "team_name_already_taken" } as const;
     }
     const id = (await teams.getTotalTeams()) + 1;
-    await teams.create({ id, name, teamPasswordHash });
+    await teams.create({
+      id,
+      name,
+      teamPasswordHash,
+      memberIds: [session.uid],
+    });
     await users.edit(session.uid, { teamId: id });
     return { success: true } as const;
   });
