@@ -26,6 +26,7 @@ export async function createTeamAction(input: CreateTeamActionInput) {
       id,
       name,
       teamPasswordHash,
+      captainId: session.uid,
       memberIds: [session.uid],
     });
     await users.edit(session.uid, { teamId: id });
