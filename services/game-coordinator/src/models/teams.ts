@@ -10,7 +10,6 @@ export type ServiceStatusDetails = { push: ServiceStatus; pull: ServiceStatus };
 export interface Team {
   id: number;
   name: string;
-  index: number;
   score: {
     total: number;
     attack: number;
@@ -24,7 +23,10 @@ export interface Team {
 export interface ITeamsModel {
   create(input: Omit<Team, "score" | "serviceStatus">): Promise<void>;
 
-  getTeamById(id: number): Promise<Team | null>;
+  getById(id: number): Promise<Team | null>;
+  getByName(name: string): Promise<Team | null>;
+
+  getTotalTeams(): Promise<number>;
   listTeams(): Promise<Omit<Team, "teamPasswordHash">[]>;
 
   updateScore(teamId: number, scores: Team["score"]): Promise<void>;
@@ -36,7 +38,7 @@ export interface ITeamsModel {
 }
 
 class TeamsModel implements ITeamsModel {
-  async getTeamById(id: number) {
+  async getById(id: number) {
     const snapshot = await firestore
       .collection("teams")
       .doc(id.toString())
@@ -45,6 +47,21 @@ class TeamsModel implements ITeamsModel {
       return null;
     }
     return snapshot.data() as Team;
+  }
+  async getByName(name: string): Promise<Team | null> {
+    const snapshot = await firestore
+      .collection("teams")
+      .where("name", "==", name)
+      .get();
+    if (snapshot.empty) {
+      return null;
+    }
+    return snapshot.docs[0].data() as Team;
+  }
+
+  async getTotalTeams(): Promise<number> {
+    const snapshot = await firestore.collection("teams").get();
+    return snapshot.size;
   }
 
   async listTeams() {

@@ -115,7 +115,7 @@ class RoundHistoryModel implements IRoundHistoryModel {
         return { success: false, error: "idempotency_key_conflict" };
       }
 
-      const team = await teams.getTeamById(entry.team);
+      const team = await teams.getById(entry.team);
       if (!team) {
         return { success: false, error: "team_not_found" };
       }
