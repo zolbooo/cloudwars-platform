@@ -36,8 +36,10 @@ export interface ITeamsModel {
 
   edit(
     id: string,
-    input: Partial<Omit<Team, "score" | "serviceStatus">>
+    input: Partial<Omit<Team, "memberIds" | "score" | "serviceStatus">>
   ): Promise<void>;
+
+  addMember(teamId: number, userId: string): Promise<void>;
   updateScore(teamId: number, scores: Team["score"]): Promise<void>;
   updateServiceStatus(
     teamId: number,
@@ -110,11 +112,17 @@ class TeamsModel implements ITeamsModel {
 
   async edit(
     id: string,
-    input: Partial<Omit<Team, "score" | "serviceStatus">>
+    input: Partial<Omit<Team, "memberIds" | "score" | "serviceStatus">>
   ): Promise<void> {
     await firestore.collection("teams").doc(id).update(input);
   }
 
+  async addMember(teamId: number, userId: string): Promise<void> {
+    const teamRef = firestore.collection("teams").doc(teamId.toString());
+    await teamRef.update({
+      memberIds: FieldValue.arrayUnion(userId),
+    });
+  }
   async updateScore(teamId: number, scores: Team["score"]): Promise<void> {
     await firestore
       .collection("teams")
