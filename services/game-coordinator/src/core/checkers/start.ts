@@ -18,6 +18,8 @@ export async function startCheckers(mode: "push" | "pull") {
   assert(gameStatus.status === "running", "Game is not running");
   const totalTeams = await teams.getTotalTeams();
 
+  const gameSettings = await metadata.getGameSettings();
+  assert(gameSettings, "Game settings not found");
   await client.runJob({
     name: checkerDispatcherJobName,
     overrides: {
@@ -30,6 +32,8 @@ export async function startCheckers(mode: "push" | "pull") {
             totalTeams.toString(),
             "--checker-mode",
             mode,
+            "--flag-lifetime-rounds",
+            gameSettings.flagLifetimeRounds.toString(),
             "--metadata",
             // TODO: Add strict validation to the metadata
             JSON.stringify({
