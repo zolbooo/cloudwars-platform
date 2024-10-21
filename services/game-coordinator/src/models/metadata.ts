@@ -18,7 +18,12 @@ class MetadataModel implements IMetadataModel {
       .doc("gameStatus")
       .get();
     if (!snapshot.exists) {
-      return { status: "pending", currentRound: 0, roundStartedAt: null };
+      return {
+        status: "pending",
+        currentRound: 0,
+        roundStartedAt: null,
+        lastCheckAt: null,
+      };
     }
     return gameStatusSchema.parse(snapshot.data());
   }
