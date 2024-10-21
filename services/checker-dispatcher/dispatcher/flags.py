@@ -10,7 +10,6 @@ def sign_round_flag(
     current_round: int,
     team_id: int,
     service_name: str,
-    expiry_time: int,
 ) -> str:
     key_version_name = get_latest_version_name()
     public_key = get_public_key(key_version_name)
@@ -29,7 +28,6 @@ def sign_round_flag(
                     "round": current_round,
                     "team_id": team_id,
                     "service_name": service_name,
-                    "exp": expiry_time,
                 }
             ).encode()
         )
