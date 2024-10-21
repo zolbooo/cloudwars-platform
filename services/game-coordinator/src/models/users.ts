@@ -6,7 +6,7 @@ export interface User {
   username: string;
   passwordHash: string;
   teamId: number | null;
-  apiKeySignature: string | null;
+  apiKey: { signature: string; masked: string } | null;
 }
 
 export interface IUserModel {
@@ -76,7 +76,7 @@ class UserModel implements IUserModel {
         id: userRef.id,
         role: "admin",
         teamId: null,
-        apiKeySignature: null,
+        apiKey: null,
       } satisfies User);
       return { success: true, id: userRef.id };
     });
@@ -97,7 +97,7 @@ class UserModel implements IUserModel {
         id: userRef.id,
         role: "user",
         teamId: null,
-        apiKeySignature: null,
+        apiKey: null,
       } satisfies User);
       return { success: true } as const;
     });

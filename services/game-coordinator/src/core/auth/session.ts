@@ -39,12 +39,12 @@ export async function getApiKeyUser(): Promise<User | null> {
   try {
     const decodedApiKey = decodeApiKey(apiKey);
     const user = await users.getById(decodedApiKey.uid);
-    if (!user || !user.apiKeySignature) {
+    if (!user || !user.apiKey) {
       return null;
     }
     const verifiedApiKey = await verifyApiKey({
       apiKey,
-      signature: user.apiKeySignature,
+      signature: user.apiKey.signature,
     });
     if (verifiedApiKey.uid !== user.id) {
       return null;
