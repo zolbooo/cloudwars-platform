@@ -1,8 +1,11 @@
 "use server";
-import argon2 from "argon2";
-
 import { users } from "@/models/users";
 import { setSession } from "@/core/auth/session";
+import {
+  hashPassword,
+  verifyPassword,
+  shouldRehashPassword,
+} from "@/core/auth/password";
 
 import { LoginActionInput, loginActionSchema } from "./login.schema";
 
@@ -13,13 +16,16 @@ export async function loginAction(input: LoginActionInput) {
     return { success: false, error: "user_not_found" } as const;
   }
 
-  const isPasswordVerified = await argon2.verify(user.passwordHash, password);
+  const isPasswordVerified = await verifyPassword({
+    hash: user.passwordHash,
+    password,
+  });
   if (!isPasswordVerified) {
     return { success: false, error: "invalid_password" } as const;
   }
 
-  if (argon2.needsRehash(user.passwordHash)) {
-    const newHash = await argon2.hash(password);
+  if (shouldRehashPassword(user.passwordHash)) {
+    const newHash = await hashPassword(password);
     await users.edit(user.id, { passwordHash: newHash });
   }
   await setSession({
