@@ -24,6 +24,7 @@ if __name__ == "__main__":
         required=True,
         choices=["push", "pull"],
     )
+    parser.add_argument("-p", "--pull-round", help="Round number to pull flag for")
     parser.add_argument(
         "-d",
         "--metadata",
@@ -33,10 +34,15 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.mode == "push" and args.round_flag is None:
         parser.error("Round flag is required in push mode")
-
+    pull_round = None
+    if args.mode == "pull":
+        if args.pull_round is None:
+            parser.error("Round number is required in pull mode")
+        pull_round = int(args.pull_round)
     run_checker(
         mode=args.mode,
         target_ip=args.target_ip,
         round_flag=args.round_flag,
+        pull_round=pull_round,
         metadata=json.loads(args.metadata),
     )
