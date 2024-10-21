@@ -1,14 +1,10 @@
 from enum import Enum
-from dataclasses import dataclass
+from typing import Literal, Optional
 
 Status = Enum("ServiceStatus", ["UP", "MUMBLE", "CORRUPT", "DOWN"])
 
 
-@dataclass
-class ServiceStatus:
-    push: Status
-    pull: Status
-
-
-def check(target_ip: str, round_flag: str) -> ServiceStatus:
-    return ServiceStatus(push=Status.UP, pull=Status.UP)
+def check(
+    mode: Literal["push", "pull"], target_ip: str, round_flag: Optional[str]
+) -> Status:
+    return Status.UP

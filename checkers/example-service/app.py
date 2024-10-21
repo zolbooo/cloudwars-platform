@@ -1,4 +1,5 @@
 import os
+import json
 import argparse
 
 from checker import run_checker
@@ -14,8 +15,28 @@ if __name__ == "__main__":
         "-t", "--target-ip", help="IP address of the target instance", required=True
     )
     parser.add_argument(
-        "-r", "--round-flag", help="Current round's flag", required=True
+        "-r", "--round-flag", help="Current round's flag, required if mode is push"
+    )
+    parser.add_argument(
+        "-m",
+        "--mode",
+        help="Mode of the checker",
+        required=True,
+        choices=["push", "pull"],
+    )
+    parser.add_argument(
+        "-d",
+        "--metadata",
+        help="Additional metadata for the checker, must be a JSON string",
+        required=True,
     )
     args = parser.parse_args()
+    if args.mode == "push" and args.round_flag is None:
+        parser.error("Round flag is required in push mode")
 
-    run_checker(args.target_ip, args.round_flag)
+    run_checker(
+        mode=args.mode,
+        target_ip=args.target_ip,
+        round_flag=args.round_flag,
+        metadata=json.loads(args.metadata),
+    )

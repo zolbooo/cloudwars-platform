@@ -1,12 +1,19 @@
+from typing import Any, Literal, Optional
 import os
+
 import httpx
 import google.oauth2.id_token
 import google.auth.transport.requests
 
-from .check import ServiceStatus
+from .check import Status
 
 
-def report_to_coordinator(service_status: ServiceStatus, round_flag: str):
+def report_to_coordinator(
+    mode: Literal["push", "pull"],
+    service_status: Status,
+    round_flag: Optional[str],
+    metadata: Any,
+):
     service_name = os.getenv("CHECKER_SERVICE_NAME")
     coordinator_base_url = os.getenv("GAME_COORDINATOR_URL")
 
@@ -18,11 +25,8 @@ def report_to_coordinator(service_status: ServiceStatus, round_flag: str):
         f"{coordinator_base_url}/api/checkers/report",
         json={
             "service": service_name,
-            "status": {
-                "push": service_status.push.name,
-                "pull": service_status.pull.name,
-            },
-            "roundFlag": round_flag,
+            "checker": {"mode": mode, "roundFlag": round_flag, "metadata": metadata},
+            "status": service_status.name,
         },
         headers={"Authorization": f"Bearer {id_token}"},
     )
