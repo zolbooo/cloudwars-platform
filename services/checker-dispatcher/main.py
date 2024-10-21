@@ -23,6 +23,12 @@ if __name__ == "__main__":
         choices=["push", "pull"],
     )
     parser.add_argument(
+        "-f",
+        "--flag-lifetime-rounds",
+        required=True,
+        help="Flag lifetime in rounds",
+    )
+    parser.add_argument(
         "-m",
         "--metadata",
         required=True,
@@ -32,6 +38,7 @@ if __name__ == "__main__":
     current_round = int(args.current_round)
     total_teams = int(args.total_teams)
     checker_mode = args.checker_mode
+    flag_lifetime_rounds = int(args.flag_lifetime_rounds)
     metadata = json.loads(args.metadata)
 
     if os.getenv("CHECKER_KEY_RING_NAME") is None:
@@ -46,6 +53,7 @@ if __name__ == "__main__":
         current_round=current_round,
         total_teams=total_teams,
         flag_header=os.getenv("CHECKER_FLAG_HEADER", "CWARS"),
+        flag_lifetime_rounds=flag_lifetime_rounds,
         checker_mode=checker_mode,
         metadata=metadata,
     )

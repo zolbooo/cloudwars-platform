@@ -11,6 +11,7 @@ def dispatch_checkers(
     current_round: int,
     total_teams: int,
     flag_header: str,
+    flag_lifetime_rounds: int,
     checker_mode: Literal["push", "pull"],
     metadata: Any,
 ):
@@ -37,5 +38,7 @@ def dispatch_checkers(
                 target_ip=target_ip,
                 checker_mode=checker_mode,
                 round_flag=round_flag,
+                current_round=current_round,
+                flag_lifetime_rounds=flag_lifetime_rounds,
                 metadata=metadata,
             )

@@ -1,4 +1,5 @@
 import json
+import secrets
 from typing import Any, Literal, Optional
 from google.cloud import run_v2
 
@@ -26,6 +27,8 @@ def invoke_checker(
     target_ip: str,
     checker_mode: Literal["push", "pull"],
     round_flag: Optional[str],
+    current_round: int,
+    flag_lifetime_rounds: int,
     metadata: Any,
 ):
     args = [
@@ -36,6 +39,13 @@ def invoke_checker(
     ]
     if round_flag is not None:
         args.extend(["--round-flag", round_flag])
+    if checker_mode == "pull":
+        args.extend(
+            [
+                "--pull-round",
+                max(current_round - secrets.randbelow(flag_lifetime_rounds), 1),
+            ]
+        )
     args.extend(["--metadata", json.dumps(metadata)])
 
     client.run_job(
