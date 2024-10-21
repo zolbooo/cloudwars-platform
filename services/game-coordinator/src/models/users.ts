@@ -6,6 +6,7 @@ export interface User {
   username: string;
   passwordHash: string;
   teamId: number | null;
+  apiKeySignature: string | null;
 }
 
 export interface IUserModel {
@@ -14,14 +15,14 @@ export interface IUserModel {
 
   rootUserExists(): Promise<boolean>;
   createRootUser(
-    input: Omit<User, "id" | "role" | "teamId">
+    input: Omit<User, "id" | "role" | "teamId" | "apiKeySignature">
   ): Promise<
     | { success: true; id: string }
     | { success: false; error: "root_user_already_exists" }
   >;
 
   register(
-    input: Omit<User, "id" | "role" | "teamId">
+    input: Omit<User, "id" | "role" | "teamId" | "apiKeySignature">
   ): Promise<
     { success: true } | { success: false; error: "username_already_taken" }
   >;
@@ -58,7 +59,7 @@ class UserModel implements IUserModel {
   }
 
   async createRootUser(
-    input: Omit<User, "id" | "role" | "teamId">
+    input: Omit<User, "id" | "role" | "teamId" | "apiKeySignature">
   ): Promise<
     | { success: true; id: string }
     | { success: false; error: "root_user_already_exists" }
@@ -74,12 +75,14 @@ class UserModel implements IUserModel {
         ...input,
         id: userRef.id,
         role: "admin",
-      });
+        teamId: null,
+        apiKeySignature: null,
+      } satisfies User);
       return { success: true, id: userRef.id };
     });
   }
 
-  register(input: Omit<User, "id" | "role" | "teamId">) {
+  register(input: Omit<User, "id" | "role" | "teamId" | "apiKeySignature">) {
     return firestore.runTransaction(async (transaction) => {
       const usernameTakenSnapshot = await transaction.get(
         firestore.collection("users").where("username", "==", input.username)
@@ -93,7 +96,9 @@ class UserModel implements IUserModel {
         ...input,
         id: userRef.id,
         role: "user",
-      });
+        teamId: null,
+        apiKeySignature: null,
+      } satisfies User);
       return { success: true } as const;
     });
   }
