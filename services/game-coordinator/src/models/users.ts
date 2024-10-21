@@ -15,14 +15,14 @@ export interface IUserModel {
 
   rootUserExists(): Promise<boolean>;
   createRootUser(
-    input: Omit<User, "id" | "role" | "teamId" | "apiKeySignature">
+    input: Omit<User, "id" | "role" | "teamId" | "apiKey">
   ): Promise<
     | { success: true; id: string }
     | { success: false; error: "root_user_already_exists" }
   >;
 
   register(
-    input: Omit<User, "id" | "role" | "teamId" | "apiKeySignature">
+    input: Omit<User, "id" | "role" | "teamId" | "apiKey">
   ): Promise<
     { success: true } | { success: false; error: "username_already_taken" }
   >;
@@ -59,7 +59,7 @@ class UserModel implements IUserModel {
   }
 
   async createRootUser(
-    input: Omit<User, "id" | "role" | "teamId" | "apiKeySignature">
+    input: Omit<User, "id" | "role" | "teamId" | "apiKey">
   ): Promise<
     | { success: true; id: string }
     | { success: false; error: "root_user_already_exists" }
@@ -82,7 +82,7 @@ class UserModel implements IUserModel {
     });
   }
 
-  register(input: Omit<User, "id" | "role" | "teamId" | "apiKeySignature">) {
+  register(input: Omit<User, "id" | "role" | "teamId" | "apiKey">) {
     return firestore.runTransaction(async (transaction) => {
       const usernameTakenSnapshot = await transaction.get(
         firestore.collection("users").where("username", "==", input.username)
