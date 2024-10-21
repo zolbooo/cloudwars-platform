@@ -8,7 +8,7 @@ const backgroundTasksServiceAccountEmail =
 
 export const backgroundTaskRoute =
   <R>(handler: (req: NextRequest) => R) =>
-  async (req: NextRequest) => {
+  async (req: NextRequest): Promise<NextResponse | Awaited<R>> => {
     assert(
       backgroundTasksServiceAccountEmail,
       "BACKGROUND_TASKS_SERVICE_ACCOUNT_EMAIL environment variable is not set."
