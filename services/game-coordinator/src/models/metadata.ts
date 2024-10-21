@@ -1,3 +1,5 @@
+import { PartialWithFieldValue } from "@google-cloud/firestore";
+
 import { GameSettings } from "@/api/setup.schema";
 import { GameStatus, gameStatusSchema } from "@/api/game/status.schema";
 
@@ -5,10 +7,12 @@ import { firestore } from "./db";
 
 export interface IMetadataModel {
   getGameStatus(): Promise<GameStatus>;
-  setGameStatus(status: Partial<GameStatus>): Promise<void>;
+  setGameStatus(status: PartialWithFieldValue<GameStatus>): Promise<void>;
 
   getGameSettings(): Promise<GameSettings | null>;
-  updateGameSettings(settings: Partial<GameSettings>): Promise<void>;
+  updateGameSettings(
+    settings: PartialWithFieldValue<GameSettings>
+  ): Promise<void>;
 }
 
 class MetadataModel implements IMetadataModel {
