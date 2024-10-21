@@ -63,7 +63,7 @@ resource "google_cloud_scheduler_job" "round_progress" {
 
   http_target {
     http_method = "POST"
-    uri         = "${var.app_origin}/api/tasks/progress-round"
+    uri         = "${var.app_origin}/api/tasks/round"
     oidc_token {
       service_account_email = google_service_account.game_background_tasks.email
     }
