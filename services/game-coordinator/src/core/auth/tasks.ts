@@ -7,8 +7,8 @@ const backgroundTasksServiceAccountEmail =
   process.env.BACKGROUND_TASKS_SERVICE_ACCOUNT_EMAIL;
 
 export const backgroundTaskRoute =
-  <R>(handler: (req: NextRequest) => R) =>
-  async (req: NextRequest): Promise<NextResponse | Awaited<R>> => {
+  <R, P>(handler: (req: NextRequest, params: P) => Promise<R>) =>
+  async (req: NextRequest, params: P): Promise<NextResponse | R> => {
     assert(
       backgroundTasksServiceAccountEmail,
       "BACKGROUND_TASKS_SERVICE_ACCOUNT_EMAIL environment variable is not set."
@@ -20,7 +20,7 @@ export const backgroundTaskRoute =
         {
           success: false,
           error: "unauthorized",
-        },
+        } as const,
         { status: 401 }
       );
     }
@@ -43,9 +43,9 @@ export const backgroundTaskRoute =
     } catch (e) {
       console.error(e);
       return NextResponse.json(
-        { success: false, error: "forbidden" },
+        { success: false, error: "forbidden" } as const,
         { status: 403 }
       );
     }
-    return await handler(req);
+    return await handler(req, params);
   };
