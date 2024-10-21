@@ -31,7 +31,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     current_round = int(args.current_round)
     total_teams = int(args.total_teams)
-    mode = args.mode
+    checker_mode = args.checker_mode
     metadata = json.loads(args.metadata)
 
     if os.getenv("CHECKER_KEY_RING_NAME") is None:
@@ -46,6 +46,6 @@ if __name__ == "__main__":
         current_round=current_round,
         total_teams=total_teams,
         flag_header=os.getenv("CHECKER_FLAG_HEADER", "CWARS"),
-        checker_mode=mode,
+        checker_mode=checker_mode,
         metadata=metadata,
     )
