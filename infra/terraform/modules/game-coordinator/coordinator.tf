@@ -55,6 +55,11 @@ resource "google_cloud_run_v2_service" "game_coordinator" {
         value = google_service_account.service-checker.email
       }
       env {
+        name  = "CHECKER_DISPATCHER_JOB_NAME"
+        value = google_cloud_run_v2_job.dispatcher.id
+      }
+
+      env {
         name  = "BACKGROUND_TASKS_SERVICE_ACCOUNT_EMAIL"
         value = google_service_account.game_background_tasks.email
       }
