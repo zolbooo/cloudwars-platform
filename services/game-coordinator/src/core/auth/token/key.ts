@@ -1,27 +1,24 @@
 import { webcrypto as crypto } from "crypto";
 
+import { getAuthSecret } from "@/core/crypto/keys";
+
 let tokenSigningKey: CryptoKey | null = null;
 
-export async function getTokenSigningKey() {
+export async function getTokenSigningKey(authSecret?: CryptoKey) {
   if (tokenSigningKey) {
     return tokenSigningKey;
   }
 
-  const authSecret = process.env.AUTH_SECRET;
-  if (!authSecret) {
-    throw new Error(
-      "AUTH_SECRET environment variable is not set. Is it provided in the Cloud Run service configuration?"
-    );
-  }
-
-  const keyMaterial = Buffer.from(authSecret, "base64");
-  if (keyMaterial.length !== 32) {
-    throw new Error("AUTH_SECRET must be 32 byte, base64-encoded string");
-  }
-  tokenSigningKey = await crypto.subtle.importKey(
-    "raw",
-    keyMaterial,
-    "AES-GCM",
+  const textEncoder = new TextEncoder();
+  tokenSigningKey = await crypto.subtle.deriveKey(
+    {
+      name: "HKDF",
+      hash: "SHA-256",
+      salt: textEncoder.encode("auth-token"),
+      info: textEncoder.encode("Cloudwars Auth token signing key"),
+    },
+    authSecret ?? (await getAuthSecret()),
+    { name: "AES-GCM", length: 256 },
     false,
     ["encrypt", "decrypt"]
   );
